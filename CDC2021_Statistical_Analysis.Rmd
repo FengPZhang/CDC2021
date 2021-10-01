@@ -117,11 +117,52 @@ correlation <-cor(Race_numbers, Income_numbers)
 
 
 plot(correlation, xlab = "Racial Groups ", ylab = "Income Levels", main = "Racial groups vs. Income levels")
-text(Race_numbers, Income_numbers, row.names(Income_numbers), cex=0.6, pos=4, col="red")
+
 ```
 
 #Proportion of Education Level
 
 ```{r}
+Education = New_York_Clean %>% select(State, County, Less.than.High.School, High.School.Diploma, College.Grad)
+
+head(Education)
+
+Less_High_School <-as.numeric(gsub(",", "", Education[,3]))
+Less_High_School [is.na(Less_High_School )] <- 0
+
+High_School <-as.numeric(gsub(",", "", Education[,4]))
+High_School[is.na(High_School)] <- 0
+
+College_Grad <-as.numeric(gsub(",", "", Education[,5]))
+College_Grad[is.na(College_Grad)] <- 0
+
+Education_Numbers = data.frame(Less_High_School, High_School, College_Grad)
+head(Education_Numbers)
+```
+# Correlation and Linear Regression
+```{r}
+x1 <- Uninsured_population
+ y1<- Less_High_School
+
+lm(y1~x1)
+
+plot(x1, y1, main = "Uninsured vs. less than high school education")
+abline(a = -83.6019 , b = 0.2031 , col = "red")
+
+x2 <- Uninsured_population
+ y2<- High_School
+ lm(y2~x2)
+plot(x2, y2, main = "Uninsured vs. high school diploma")
+abline(a =  454.700 , b = 0.544 , col = "red")
+
+x3 <- Uninsured_population
+y3 <- College_Grad
+lm(y3~x3)
+plot(x3, y3, main = "Uninsured vs. College Graduate")
+abline(a =   -388.4040  , b = 0.2531 , col = "red")
+ 
+
+
+
 
 ```
