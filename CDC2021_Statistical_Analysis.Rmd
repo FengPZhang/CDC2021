@@ -1,0 +1,127 @@
+---
+title: "CDC2021_Statistical_Analysis"
+author: "Feng Zhang"
+date: "9/30/2021"
+output: html_document
+---
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(tidyverse)
+```
+## Clean Data of New York 
+We decided to examine the clean data of New York's counties. In this set of commands, we are trying to figure out the % of insured and uninsured folks. 
+
+```{r}
+#To set the directory path for R to get the data
+setwd("C:/Users/tommy/Downloads")
+
+New_York_Clean <- read.csv("cleanedNY.csv")
+New_York_Clean_Percentage <- read.csv("cleanedNYpercentages.csv")
+
+head(New_York_Clean)
+head(New_York_Clean_Percentage)
+
+```
+
+#To see what are the values in NY data and data types
+```{r}
+str(New_York_Clean)
+str(New_York_Clean, list.len = 4)
+
+lapply(New_York_Clean, typeof)
+```
+
+
+# Summary Statistics of Uninsured people in New York
+```{r}
+New_York_uninsured = New_York_Clean %>% select (State, County, Uninsured.Population..Excluding.Undocumented.)
+
+head(New_York_uninsured)
+
+Uninsured_population <-as.numeric(gsub(",","", New_York_uninsured[,3] ))
+summary(Uninsured_population, title = "Uninsured population in the state of New York")
+
+```
+# Proportion of race and income 
+Comparing the race and income of the uninsured population of NY
+Then doing a simple linear regression to find if the two variables have a linear relationship 
+```{r}
+# Extract the columns for race & Income levels
+# convert characters to #s
+# Then do a simple regression or correlation to see if the the two have a relationship
+Race = New_York_Clean %>% select (State,County,Spanish.Hispanic.Latino.Origin, White.Non.Latino, Black.Non.Latino, Asian...Native.Hawaiian...Pac.Is, American.Indian...Alaska.Native, Multi.racial.or.Other)
+
+head(Race)
+
+State <- as.character(Race[,1])
+County <- as.character(Race[,2])
+
+Spanish_Origin <- as.numeric(gsub(",","", Race[,3]))
+Spanish_Origin[is.na(Spanish_Origin)] <- 0
+
+White_Non_Latino <- as.numeric(gsub(",","", Race[,4]))
+
+Black_Non_Latino <- as.numeric(gsub(",","", Race[,5]))
+Black_Non_Latino[is.na(Black_Non_Latino)] <- 0
+
+AAPI <- as.numeric(gsub(",","", Race[,6]))
+AAPI[is.na(AAPI)] <- 0
+
+Native_American_Alaska_Native <- as.numeric(gsub(",","", Race[,7]))
+Native_American_Alaska_Native[is.na(Native_American_Alaska_Native)] <- 0
+
+Multi_Racial_Other<- as.numeric(gsub(",","", Race[,8]))
+Multi_Racial_Other[is.na(Multi_Racial_Other)] <- 0
+#New Table of Race info
+Race_numbers = data.frame(Spanish_Origin, White_Non_Latino, Black_Non_Latino, AAPI, Native_American_Alaska_Native, Multi_Racial_Other)  
+head(Race_numbers)
+
+
+```
+
+```{r}
+Income = New_York_Clean %>% select(State,County,HIU.Income...100..FPL, HIU.Income.100.138..FPL, HIU.Income.139.249..FPL, HIU.Income.250.400..FPL, HIU.Income.400..FPL)
+
+head(Income)
+
+#HIU Income < 100% FPL
+Income_less_100 <- as.numeric(gsub(",", "", Income[,3]))
+Income_less_100[is.na(Income_less_100)] <- 0
+
+#HIU Income 100-138% FPL
+Income_138 <- as.numeric(gsub(",", "", Income[,4]))
+Income_138[is.na(Income_138)] <- 0
+
+#HIU Income 139-249% FPL
+Income_249 <- as.numeric(gsub(",", "", Income[,5]))
+Income_249[is.na(Income_249)] <- 0
+
+#HIU Income 250-400% FPL
+Income_400 <- as.numeric(gsub(",", "", Income[,6]))
+Income_400[is.na(Income_400)] <- 0
+
+#HIU Income 400% FPL
+Income_400_more <- as.numeric(gsub(",", "", Income[,7]))
+Income_400_more[is.na(Income_400_more)] <- 0
+
+
+Income_numbers = data.frame(Income_less_100 ,Income_138,Income_249, Income_400, Income_400_more)
+
+head(Income_numbers)
+
+
+```
+```{r}
+# Now For Correlation
+correlation <-cor(Race_numbers, Income_numbers)
+
+
+plot(correlation, xlab = "Racial Groups ", ylab = "Income Levels", main = "Racial groups vs. Income levels")
+text(Race_numbers, Income_numbers, row.names(Income_numbers), cex=0.6, pos=4, col="red")
+```
+
+#Proportion of Education Level
+
+```{r}
+
+```
