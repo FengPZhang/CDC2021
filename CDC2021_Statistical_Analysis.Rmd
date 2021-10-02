@@ -37,10 +37,7 @@ lapply(New_York_Clean, typeof)
 New_York_uninsured = New_York_Clean %>% select (State, County, Uninsured.Population..Excluding.Undocumented.)
 
 head(New_York_uninsured)
-#New_York_uninsured_mutate = New_York_uninsured %>% mutate (Uninsured = as.numeric(gsub(",","", New_York_uninsured[,3])))
 
-#head(New_York_uninsured_mutate)
- 
 Uninsured_population <-as.numeric(gsub(",","", New_York_uninsured[,3] ))
 summary(Uninsured_population, title = "Uninsured population in the state of New York")
 
@@ -156,7 +153,7 @@ y1 <- Less_High_School
 
 lm1 <- lm(y1 ~ x1)
 
-plot(x1, y1, main = "Uninsured vs. less than high school education")
+plot(x1, y1, main = "Uninsured vs. less than high school education", xlab = "Uninsured Population", ylab = "Less Than High School Education")
 abline(a = -83.6019 , b = 0.2031 , col = "red")
 # Summary of the linear regression between uninsured individuals v. less than high school education
 summary(lm1)
@@ -164,16 +161,17 @@ summary(lm1)
 x2 <- Uninsured_population
 y2 <- High_School
 lm2 <- lm(y2 ~ x2)
-plot(x2, y2, main = "Uninsured vs. high school diploma")
+plot(x2, y2, main = "Uninsured vs. High School Diploma", xlab = "Uninsured Population", ylab = "High School Diploma")
 abline(a =  454.700 , b = 0.544 , col = "red")
-# Summary of the linear regression between uninsured individuals v. less than high school education
+# Summary of the linear regression between uninsured individuals v. high school education
 summary(lm2)
 
 x3 <- Uninsured_population
 y3 <- College_Grad
 lm3 <- lm(y3 ~ x3)
-plot(x3, y3, main = "Uninsured vs. College Graduate")
+plot(x3, y3, main = "Uninsured vs. College Graduate", xlab = "Uninsured Population", ylab = "College Graduate")
 abline(a =   -388.4040  , b = 0.2531 , col = "red")
+#Summary of the linear regression between uninsured individuals v. College/ college graduate education
 summary(lm3)
 
 
